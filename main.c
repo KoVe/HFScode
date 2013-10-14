@@ -21,9 +21,18 @@
 
 
 void main() {
-    //demoButton();
-    //demoI2C();
-    //demoTuner();
-    demoADC();
-    
+    SYSTEMConfigPerformance(40000000L);
+
+    initI2C();
+    initRadio();
+    initADC();
+    startPWM(200);
+    INTEnableSystemMultiVectoredInt();
+
+    unsigned int freq    = 200000000;
+    unsigned int step    =     62500;
+
+    setRadio(freq,step);
+
+    while(1);
 }

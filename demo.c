@@ -28,16 +28,18 @@ void demoButton(){
  */
 void demoI2C(){
 
-        UINT8               dataIF[4],dataTuner[5];
+        UINT8               dataIF_B[2],dataIF_C[2],dataIF_E[2],dataTuner[5];
         int i;
 
         initI2C();
 
         //FM1216E p.20
-        dataIF[0] =   0x00;
-        dataIF[1] =   0x0E;
-        dataIF[2] =   0xD0;
-        dataIF[3] =   0x77;
+        dataIF_B[0] =   I2C_ADDRESS_IF_SAD_B;
+        dataIF_B[1] =   0x0E;                       // 0000 1110
+        dataIF_C[0] =   I2C_ADDRESS_IF_SAD_C;
+        dataIF_C[1] =   0xD0;                       // 1101 0000
+        dataIF_E[0] =   I2C_ADDRESS_IF_SAD_E;
+        dataIF_E[1] =   0x77;                       // 0111 0111
 
         dataTuner[0] = 0x08;
         dataTuner[1] = 0x7E;
@@ -46,11 +48,15 @@ void demoI2C(){
         dataTuner[4] = 0xA0;
 
         while(1) {
-            writeI2C(I2C_ADDRESS_IF,dataIF ,4);
+            writeI2C(I2C_ADDRESS_IF,dataIF_B ,2);
             for(i=0;i<10000;i++);                   // Wait 10000 cycles, makes the waveforms more clear (oscilloscope)
+            writeI2C(I2C_ADDRESS_IF,dataIF_C ,2);
+            for(i=0;i<10000;i++);
+            writeI2C(I2C_ADDRESS_IF,dataIF_E ,2);
+            for(i=0;i<10000;i++);
             readI2C(I2C_ADDRESS_IF);
             for(i=0;i<10000;i++);
-            writeI2C(I2C_ADDRESS_TUNER,dataIF ,5);
+            writeI2C(I2C_ADDRESS_TUNER,dataTuner ,5);
             for(i=0;i<10000;i++);
             readI2C(I2C_ADDRESS_TUNER);
             for(i=0;i<1000000;i++);
