@@ -14,8 +14,8 @@ extern "C" {
 
 void startPWM(unsigned int dutycycle);
 void stopPWM();
-void setPWM(unsigned int dutycycle);
-unsigned int ADC2PWM(unsigned int ADC10bitValue);
+void setPWM(int dutycycle);
+int ADC2PWM(int ADC10bitValue);
 
 #ifdef	__cplusplus
 }

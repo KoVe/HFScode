@@ -22,7 +22,7 @@ void startPWM(unsigned int dutycycle)
      * 4 Groups of 8 possible output pin selections
      * OC2=>RPB5 is in group 2 */
     PPSOutput(2,RPB5,OC2);
-    OpenTimer2(T2_ON, PWM_PERIOD_TICKS);
+    OpenTimer2(T2_ON, PWM_PERIOD_TICKS-1);
     OpenOC2( OC_ON | OC_TIMER_MODE16 | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE, dutycycle, dutycycle );
 }
 
@@ -32,7 +32,7 @@ void stopPWM()
     CloseTimer2();
 }
 
-void setPWM(unsigned int dutycycle)
+void setPWM(int dutycycle)
 {
     if(dutycycle>ReadPeriod2())
         SetDCOC2PWM(ReadPeriod2());
@@ -45,7 +45,7 @@ void setPWM(unsigned int dutycycle)
 /* Scale a value read by the ADC, so that is lies between 0 and
  * PWM_PERIOD_TICKS
  ******************************************************************************/
-unsigned int ADC2PWM(unsigned int ADC10bitValue)
+int ADC2PWM(int ADC10bitValue)
 {
     return (ADC10bitValue*PWM_PERIOD_TICKS) / (2 << (10-1));
 }
