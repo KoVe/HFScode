@@ -81,6 +81,7 @@ BOOL writeIF(UINT8 BDATA, UINT8 CDATA, UINT8 EDATA);
 UINT8 readIF();
 BOOL writeTuner(UINT8 DB1, UINT8 DB2, UINT8 CB, UINT8 BB, UINT8 AB);
 UINT8 readTuner();
+
 void initRadio();
 void set98MHz();
 void setPAL();

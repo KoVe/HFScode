@@ -20,7 +20,9 @@ extern "C" {
 #define PB_DIV              (1 << DEVCFG1bits.FPBDIV)       // Peripheral Clock Divisor
 #define PB_FREQ             (SYS_FREQ/PB_DIV)               // Peripheral Clock Frequency
 
-#define PWM_FREQ            (50000L)                        // 50kHz PWM frequency
+//#define PWM_FREQ            (50000L)                        // 50kHz PWM frequency
+//#define PWM_FREQ            (500000L)                       // 500kHz PWM frequency
+#define PWM_FREQ            (1600000L)                      // 1.6MHz PWM frequency
 #define PWM_PERIOD_TICKS    (SYS_FREQ/(PB_DIV*PWM_FREQ))
 
 
