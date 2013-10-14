@@ -9,17 +9,21 @@
 
 BOOL writeIF(UINT8 BDATA, UINT8 CDATA, UINT8 EDATA)
 {
-    UINT8 data[4];
+    UINT8 data[2];
 
-    data[0] = I2C_ADDRESS_IF_SAD;
+    data[0] = I2C_ADDRESS_IF_SAD_B;
     data[1] = BDATA;
-    data[2] = CDATA;
-    data[3] = EDATA;
-    
-    writeI2C(I2C_ADDRESS_IF, data ,4);
+    writeI2C(I2C_ADDRESS_IF, data ,2);
+
+    data[0] = I2C_ADDRESS_IF_SAD_C;
+    data[1] = CDATA;
+    writeI2C(I2C_ADDRESS_IF, data ,2);
+
+    data[0] = I2C_ADDRESS_IF_SAD_E;
+    data[1] = EDATA;
+    writeI2C(I2C_ADDRESS_IF, data ,2);
 
     return TRUE;
-
 }
 UINT8 readIF()
 {
@@ -41,11 +45,18 @@ UINT8 readTuner()
 {
     return readI2C(I2C_ADDRESS_TUNER);
 }
+/* set Radio does not work without initRadio()
+ * TODO: find out why, crf p20 of FM1216ME datasheet
+ */
+void initRadio()
+{
+    set98MHz();
+}
 void set98MHz()
 {
     UINT8   BDATA, CDATA, EDATA;
     UINT8   DB1, DB2, CB, BB, AB;
-    UINT8   temp1,temp2;
+    //UINT8   temp1,temp2;
 
     BDATA = 0x0E;
     CDATA = 0xD0;
@@ -58,7 +69,81 @@ void set98MHz()
     AB    = 0xA0;
 
     writeIF(BDATA, CDATA, EDATA);
-    temp1 = readIF();
+    //temp1 = readIF();
     writeTuner(DB1, DB2, CB, BB, AB);
-    temp2 = readTuner();
+    //temp2 = readTuner();
+}
+void setPAL()
+{
+    UINT8   BDATA, CDATA, EDATA;
+    UINT8   DB1, DB2, CB, BB, AB;
+    //UINT8   temp1,temp2;
+
+    BDATA = 0x16;
+    CDATA = 0x70;
+    EDATA = 0x49;
+
+    DB1   = 0x1F;
+    DB2   = 0xE2;
+    CB    = 0x86;
+    BB    = 0x44;
+    AB    = 0xA0;
+
+    writeIF(BDATA, CDATA, EDATA);
+    //temp1 = readIF();
+    writeTuner(DB1, DB2, CB, BB, AB);
+    //temp2 = readTuner();
+}
+
+void setRadio(unsigned int freq, unsigned int stepsize)
+{
+    UINT8   BDATA, CDATA, EDATA;
+    UINT8   DB1, DB2, CB, BB, AB;
+
+    if      (freq<48250000)
+        blinkLed(100000);
+    else if (freq<160000000)
+        BB = TUNER_BB(TUNER_BB_L);
+    else if (freq<442000000)
+        BB = TUNER_BB(TUNER_BB_M);
+    else if (freq<160000000)
+        BB = TUNER_BB(TUNER_BB_H);
+    else
+        blinkLed(100000);
+
+    if       (stepsize == 50000)
+    {
+        CB  = TUNER_CB(TUNER_CB_PLL_ON|TUNER_CB_STEPSIZE_50KHZ|TUNER_CB_TEST_DEFAULT|TUNER_CB_CP_LOW);
+        DB1 = TUNER_DB1(freq,33300000,stepsize);
+        DB2 = TUNER_DB2(freq,33300000,stepsize);
+    }
+    else if  (stepsize== 31250)
+    {
+        CB  = TUNER_CB(TUNER_CB_PLL_ON|TUNER_CB_STEPSIZE_31K25HZ|TUNER_CB_TEST_DEFAULT|TUNER_CB_CP_LOW);
+        DB1 = TUNER_DB1(freq,33300000,stepsize);
+        DB2 = TUNER_DB2(freq,33300000,stepsize);
+    }
+    else if  (stepsize==166700)
+    {
+        CB  = TUNER_CB(TUNER_CB_PLL_ON|TUNER_CB_STEPSIZE_166K7HZ|TUNER_CB_TEST_DEFAULT|TUNER_CB_CP_LOW);
+        DB1 = TUNER_DB1(freq,33300000,stepsize);
+        DB2 = TUNER_DB2(freq,33300000,stepsize);
+    }
+    else if  (stepsize== 62500)
+    {
+        CB  = TUNER_CB(TUNER_CB_PLL_ON|TUNER_CB_STEPSIZE_62K5HZ|TUNER_CB_TEST_DEFAULT|TUNER_CB_CP_LOW);
+        DB1 = TUNER_DB1(freq,33300000,stepsize);
+        DB2 = TUNER_DB2(freq,33300000,stepsize);
+    }
+    else
+        blinkLed(100000);
+
+    AB    = TUNER_AB(TUNER_AB_ATC_FAST|TUNER_AB_AGC_109);
+
+    BDATA = 0x08;
+    CDATA = 0x10;
+    EDATA = 0x08;
+
+    writeIF(BDATA, CDATA, EDATA);
+    writeTuner(DB1, DB2, CB, BB, AB);
 }
