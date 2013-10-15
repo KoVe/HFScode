@@ -65,6 +65,15 @@ extern "C" {
     #define TUNER_AB_ATC_SLOW           ((0x0) << TUNER_AB_ATC_POS)
     #define TUNER_AB_ATC_FAST           ((0x1) << TUNER_AB_ATC_POS)
 
+
+#define TUNER_IF_FREQ       33300000    // TDA9887 datasheet, Table 17
+#define TUNER_LOWBAND_L     48250000    // FM1216ME datasheet, p3
+#define TUNER_LOWBAND_U     160000000   // FM1216ME datasheet, p3
+#define TUNER_MIDBAND_L     160000000   // FM1216ME datasheet, p3
+#define TUNER_MIDBAND_U     442000000   // FM1216ME datasheet, p3
+#define TUNER_HIGHBAND_L    442000000   // FM1216ME datasheet, p3
+#define TUNER_HIGHBAND_U    863250000   // FM1216ME datasheet, p3
+
 /* MACRO DEFENITIONS FOR IF SECTION OF FM1216ME (TDA9887) */
 
 #define I2C_ADDRESS_IF          0x43 // FM1216ME p.15   100 0011

@@ -28,40 +28,15 @@
 
 int main() {
     SYSTEMConfigPerformance(SYS_FREQ);
-    initADC(ADC_SAMPLES_PER_INT_1);
 
-    int ADCValues[4];
-    int ADCValuesCnt=0;
-    int prod[2];
-    int ampl;
+    initI2C();
+    initRadio();
 
-    startPWM(10);
-    mPORTBSetPinsDigitalOut(BIT_6);
+    unsigned int freq    =  433830000;
+    unsigned int step    =      50000;
 
-    while(1)
-    {
-        while(!BusyADC10());
-        ADCValues[ADCValuesCnt] = ReadADC10(0);
-
-        prod[ADCValuesCnt%2] = (ADCValues[ADCValuesCnt%2]-ADCValues[(ADCValuesCnt%2) +2 ])*(ADCValues[ADCValuesCnt%2]-ADCValues[(ADCValuesCnt%2) +2 ]);
-        
-        ampl = prod[0]+prod[1];
-        ampl = (int) (sqrt(ampl)+0.5);
-        ampl = (ampl << 6) >> (10);
-        ampl = (ampl>64)?64:ampl;
-        ampl = (ampl<0)?0:ampl;
-
-        setPWM(ampl);
-//        if(ampl>0x1FF)
-//            mPORTBSetBits(BIT_6);
-//        else
-//            mPORTBClearBits(BIT_6);
-        ADCValuesCnt = (ADCValuesCnt+1) % 4;
-
-
-
-
-    }
+    setRadio(freq,step);
+    runADCautoSampAutoConv();
 
     return (EXIT_SUCCESS);
 }

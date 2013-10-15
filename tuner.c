@@ -100,13 +100,15 @@ void setRadio(unsigned int freq, unsigned int stepsize)
     UINT8   BDATA, CDATA, EDATA;
     UINT8   DB1, DB2, CB, BB, AB;
 
-    if      (freq<48250000)
+
+
+    if      (freq<TUNER_LOWBAND_L)
         blinkLed(100000);
-    else if (freq<160000000)
+    else if (freq<TUNER_LOWBAND_U)
         BB = TUNER_BB(TUNER_BB_L);
-    else if (freq<442000000)
+    else if (freq<TUNER_MIDBAND_U)
         BB = TUNER_BB(TUNER_BB_M);
-    else if (freq<160000000)
+    else if (freq<TUNER_HIGHBAND_U)
         BB = TUNER_BB(TUNER_BB_H);
     else
         blinkLed(100000);
@@ -114,26 +116,26 @@ void setRadio(unsigned int freq, unsigned int stepsize)
     if       (stepsize == 50000)
     {
         CB  = TUNER_CB(TUNER_CB_PLL_ON|TUNER_CB_STEPSIZE_50KHZ|TUNER_CB_TEST_DEFAULT|TUNER_CB_CP_LOW);
-        DB1 = TUNER_DB1(freq,33300000,stepsize);
-        DB2 = TUNER_DB2(freq,33300000,stepsize);
+        DB1 = TUNER_DB1(freq,TUNER_IF_FREQ,stepsize);
+        DB2 = TUNER_DB2(freq,TUNER_IF_FREQ,stepsize);
     }
     else if  (stepsize== 31250)
     {
         CB  = TUNER_CB(TUNER_CB_PLL_ON|TUNER_CB_STEPSIZE_31K25HZ|TUNER_CB_TEST_DEFAULT|TUNER_CB_CP_LOW);
-        DB1 = TUNER_DB1(freq,33300000,stepsize);
-        DB2 = TUNER_DB2(freq,33300000,stepsize);
+        DB1 = TUNER_DB1(freq,TUNER_IF_FREQ,stepsize);
+        DB2 = TUNER_DB2(freq,TUNER_IF_FREQ,stepsize);
     }
     else if  (stepsize==166700)
     {
         CB  = TUNER_CB(TUNER_CB_PLL_ON|TUNER_CB_STEPSIZE_166K7HZ|TUNER_CB_TEST_DEFAULT|TUNER_CB_CP_LOW);
-        DB1 = TUNER_DB1(freq,33300000,stepsize);
-        DB2 = TUNER_DB2(freq,33300000,stepsize);
+        DB1 = TUNER_DB1(freq,TUNER_IF_FREQ,stepsize);
+        DB2 = TUNER_DB2(freq,TUNER_IF_FREQ,stepsize);
     }
     else if  (stepsize== 62500)
     {
         CB  = TUNER_CB(TUNER_CB_PLL_ON|TUNER_CB_STEPSIZE_62K5HZ|TUNER_CB_TEST_DEFAULT|TUNER_CB_CP_LOW);
-        DB1 = TUNER_DB1(freq,33300000,stepsize);
-        DB2 = TUNER_DB2(freq,33300000,stepsize);
+        DB1 = TUNER_DB1(freq,TUNER_IF_FREQ,stepsize);
+        DB2 = TUNER_DB2(freq,TUNER_IF_FREQ,stepsize);
     }
     else
         blinkLed(100000);
